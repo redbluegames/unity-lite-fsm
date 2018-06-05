@@ -16,8 +16,7 @@
         {
             // Reflected Setup
             var reflector = new StateReflector<OnOffStateID>(this);
-            var states = reflector.GetStates();
-            this.stateMachine = new StateMachine<OnOffStateID>(states, OnOffStateID.Off);
+            this.stateMachine = new StateMachine<OnOffStateID>(reflector, OnOffStateID.Off);
         }
 
         private void Update()
