@@ -1,4 +1,4 @@
-﻿namespace RedBlueGames.ReflectedEnumFSM
+﻿namespace RedBlueGames.LiteFSM
 {
     using System;
 
