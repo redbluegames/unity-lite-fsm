@@ -18,8 +18,8 @@
 
         public StateMachine(IStateReflector<T> reflector, T initialStateID)
         {
-            var states = reflector.GetStates();
-            this.Initialize(states, initialStateID);
+            var reflectedStates = reflector.GetStates();
+            this.Initialize(reflectedStates, initialStateID);
         }
 
         public StateMachine(IState<T>[] states, T initialStateID)

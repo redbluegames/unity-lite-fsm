@@ -51,38 +51,27 @@
 
         private State<T>.EnterMethod FindEnterDelegateByName(Object classInstanceToReflect, string methodName)
         {
-            var methodInfo = classInstanceToReflect.GetType().GetMethod(methodName,
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
-
-            if (methodInfo != null)
-            {
-                return Delegate.CreateDelegate(typeof(State<T>.EnterMethod), classInstanceToReflect, methodInfo) as State<T>.EnterMethod;
-            }
-
-            return null;
+            return CreateDelegateForMethodByname(classInstanceToReflect, typeof(State<T>.EnterMethod), methodName) as State<T>.EnterMethod;
         }
 
         private State<T>.ExitMethod FindExitDelegateByName(Object classInstanceToReflect, string methodName)
         {
-            var methodInfo = classInstanceToReflect.GetType().GetMethod(methodName,
-                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
-
-            if (methodInfo != null)
-            {
-                return Delegate.CreateDelegate(typeof(State<T>.ExitMethod), classInstanceToReflect, methodInfo) as State<T>.ExitMethod;
-            }
-
-            return null;
+            return CreateDelegateForMethodByname(classInstanceToReflect, typeof(State<T>.ExitMethod), methodName) as State<T>.ExitMethod;
         }
 
         private State<T>.UpdateMethod FindUpdateDelegateByName(Object classInstanceToReflect, string methodName)
+        {
+            return CreateDelegateForMethodByname(classInstanceToReflect, typeof(State<T>.UpdateMethod), methodName) as State<T>.UpdateMethod;
+        }
+
+        private static Delegate CreateDelegateForMethodByname(Object classInstanceToReflect, Type delegateType, string methodName)
         {
             var methodInfo = classInstanceToReflect.GetType().GetMethod(methodName,
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
 
             if (methodInfo != null)
             {
-                return Delegate.CreateDelegate(typeof(State<T>.UpdateMethod), classInstanceToReflect, methodInfo) as State<T>.UpdateMethod;
+                return Delegate.CreateDelegate(delegateType, classInstanceToReflect, methodInfo);
             }
 
             return null;
