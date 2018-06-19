@@ -1,27 +1,26 @@
 ﻿namespace RedBlueGames.LiteFSM.Tests
 {
-    using UnityEngine;
-    using UnityEngine.TestTools;
     using NUnit.Framework;
-    using System.Collections;
     using RedBlueGames.LiteFSM;
 
     public class StateMachineTests
     {
         [Test]
-        public void Ctor_NoReflection_EntersInitialState()
+        public void CtorNoReflection_OneState_EntersOnlyInitialState()
         {
             // Arrange
-            var stubStates = new StubState<SingleStateID>[]
+            var stubStates = new StubState<TwoStatesID>[]
             {
-                new StubState<SingleStateID>(SingleStateID.Init)
+                new StubState<TwoStatesID>(TwoStatesID.One),
+                new StubState<TwoStatesID>(TwoStatesID.Two),
             };
 
             // Act
-            new StateMachine<SingleStateID>(stubStates, SingleStateID.Init);
+            new StateMachine<TwoStatesID>(stubStates, TwoStatesID.One);
 
             // Assert
             Assert.IsTrue(stubStates[0].EnterCalled);
+            Assert.IsFalse(stubStates[1].EnterCalled);
         }
     }
 }

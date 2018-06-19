@@ -2,11 +2,6 @@
 {
     using System;
 
-    public enum SingleStateID
-    {
-        Init
-    }
-
     public class StubState<T> : IState<T> where T : struct, IConvertible, IComparable, IFormattable
     {
         public bool EnterCalled { get; private set; }
