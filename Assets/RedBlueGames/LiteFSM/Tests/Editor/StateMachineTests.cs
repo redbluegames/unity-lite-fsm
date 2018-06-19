@@ -22,5 +22,19 @@
             Assert.IsTrue(stubStates[0].EnterCalled);
             Assert.IsFalse(stubStates[1].EnterCalled);
         }
+
+        [Test]
+        public void CtorNoReflection_NotEnoughStates_Throws()
+        {
+            // Arrange
+            var stubStates = new StubState<TwoStatesID>[]
+            {
+                new StubState<TwoStatesID>(TwoStatesID.One)
+            };
+
+            // Act / Assert
+            Assert.Throws(typeof(System.ArgumentException),
+                          () => new StateMachine<TwoStatesID>(stubStates, TwoStatesID.One));
+        }
     }
 }

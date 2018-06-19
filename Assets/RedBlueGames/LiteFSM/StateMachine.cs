@@ -49,15 +49,22 @@
 
         private void Initialize(IState<T>[] states, T initialStateID)
         {
-            /*
             // Validate that all entries of T are supplied
-            // TODO: Test for missing entries
-            var missingEntries = this.GetMissingIDs(states);
-            foreach (var missingEntry in missingEntries)
+            var missingEntries = GetMissingIDs(states);
+            if (missingEntries.Length > 0)
             {
-                UnityEngine.Debug.Log("Missing: " + missingEntry.ToString());
+                var message = string.Concat(
+                    "StateMachine trying to initialize with an invalid set of states. " +
+                    "Not enough states passed in. Missing states:");
+                foreach (var missingEntry in missingEntries)
+                {
+                    message = string.Concat(message, missingEntry.ToString(), ", ");
+                }
+
+                throw new System.ArgumentException(message);
             }
 
+            /*
             // TODO: Too many entries (doubled up)
 
             // TODO: Entries of Different types of T? Like, two different enums?
@@ -76,8 +83,7 @@
             this.CurrentState.Enter();
         }
 
-        /*
-        private T[] GetMissingIDs(IState<T>[] states)
+        private static T[] GetMissingIDs(IState<T>[] states)
         {
             var foundTs = new List<T>();
             foreach (var state in states)
@@ -97,6 +103,6 @@
             }
 
             return missingTs.ToArray();
-        }*/
+        }
     }
 }
