@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class StubState<T> : IState<T> where T : struct, IConvertible, IComparable, IFormattable
+    public class StateStub<T> : IState<T> where T : struct, IConvertible, IComparable, IFormattable
     {
         public bool EnterCalled { get; private set; }
         public bool ExitCalled { get; private set; }
@@ -11,7 +11,7 @@
 
         public T ID { get; private set; }
 
-        public StubState(T id)
+        public StateStub(T id)
         {
             this.ID = id;
         }

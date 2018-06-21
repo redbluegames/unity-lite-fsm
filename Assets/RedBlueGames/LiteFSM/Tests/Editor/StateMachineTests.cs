@@ -9,10 +9,10 @@
         public void CtorNoReflection_OneState_EntersOnlyInitialState()
         {
             // Arrange
-            var stubStates = new StubState<TwoStatesID>[]
+            var stubStates = new StateStub<TwoStatesID>[]
             {
-                new StubState<TwoStatesID>(TwoStatesID.One),
-                new StubState<TwoStatesID>(TwoStatesID.Two),
+                new StateStub<TwoStatesID>(TwoStatesID.One),
+                new StateStub<TwoStatesID>(TwoStatesID.Two),
             };
 
             // Act
@@ -27,9 +27,9 @@
         public void CtorNoReflection_NotEnoughStates_Throws()
         {
             // Arrange
-            var stubStates = new StubState<TwoStatesID>[]
+            var stubStates = new StateStub<TwoStatesID>[]
             {
-                new StubState<TwoStatesID>(TwoStatesID.One)
+                new StateStub<TwoStatesID>(TwoStatesID.One)
             };
 
             var expectedMessage = string.Concat(
@@ -46,11 +46,11 @@
         public void CtorNoReflection_DuplicateStates_Throws()
         {
             // Arrange
-            var stubStates = new StubState<TwoStatesID>[]
+            var stubStates = new StateStub<TwoStatesID>[]
             {
-                new StubState<TwoStatesID>(TwoStatesID.One),
-                new StubState<TwoStatesID>(TwoStatesID.One),
-                new StubState<TwoStatesID>(TwoStatesID.Two),
+                new StateStub<TwoStatesID>(TwoStatesID.One),
+                new StateStub<TwoStatesID>(TwoStatesID.One),
+                new StateStub<TwoStatesID>(TwoStatesID.Two),
             };
 
             var expectedMessage = string.Concat(
@@ -60,6 +60,22 @@
             // Act / Assert
             var exception = Assert.Throws<System.ArgumentException>(
                 () => new StateMachine<TwoStatesID>(stubStates, TwoStatesID.One));
+            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void CtorNoReflection_NotAnEnum_Throws()
+        {
+            // Arrange
+            var stubStates = new StateStubNoEnum[] { };
+
+            var expectedMessage = string.Concat(
+                    "StateMachine trying to initialize with an invalid generic type. " +
+                    "Generic type (T) is not an Enum. Type: NotAnEnum");
+
+            // Act / Assert
+            var exception = Assert.Throws<System.ArgumentException>(
+                () => new StateMachine<NotAnEnum>(stubStates, default(NotAnEnum)));
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
     }

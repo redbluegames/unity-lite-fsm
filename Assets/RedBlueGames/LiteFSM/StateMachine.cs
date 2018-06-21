@@ -49,13 +49,8 @@
 
         private void Initialize(IState<T>[] states, T initialStateID)
         {
+            this.VerifyTIsEnum();
             this.VerifyAllStatesExistInT(states);
-
-            /*
-            // TODO: Entries of Different types of T? Like, two different enums?
-
-            // TODO: Test it's an enum (typeof(T).IsEnum)
-            */
 
             this.states = new Dictionary<T, IState<T>>();
             foreach (var state in states)
@@ -66,6 +61,17 @@
             // TODO: Validate desiredState is in the dictionary
             this.currentStateID = initialStateID;
             this.CurrentState.Enter();
+        }
+
+        private void VerifyTIsEnum()
+        {
+            if (!typeof(T).IsEnum)
+            {
+                var message = string.Concat(
+                    "StateMachine trying to initialize with an invalid generic type. " +
+                    "Generic type (T) is not an Enum. Type: " + typeof(T).ToString());
+                throw new System.ArgumentException(message);
+            }
         }
 
         private void VerifyAllStatesExistInT(IState<T>[] states)
