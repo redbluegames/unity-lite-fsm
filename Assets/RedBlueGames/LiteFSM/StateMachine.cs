@@ -29,8 +29,6 @@
 
         public void ChangeState(T desiredStateID)
         {
-            // TODO: Validate desiredState is in the dictionary
-
             // Can't exit and re-enter the same state
             if (desiredStateID.Equals(this.currentStateID))
             {
@@ -50,7 +48,7 @@
         private void Initialize(IState<T>[] states, T initialStateID)
         {
             this.VerifyTIsEnum();
-            this.VerifyAllStatesExistInT(states);
+            this.VerifyStatesRepresentAllEntriesOfT(states);
 
             this.states = new Dictionary<T, IState<T>>();
             foreach (var state in states)
@@ -58,7 +56,6 @@
                 this.states.Add(state.ID, state);
             }
 
-            // TODO: Validate desiredState is in the dictionary
             this.currentStateID = initialStateID;
             this.CurrentState.Enter();
         }
@@ -74,14 +71,10 @@
             }
         }
 
-        private void VerifyAllStatesExistInT(IState<T>[] states)
+        private void VerifyStatesRepresentAllEntriesOfT(IState<T>[] states)
         {
-            var entriesInT = Enum.GetValues(typeof(T));
-            if (states.Length != entriesInT.Length)
-            {
-                this.VerifyStatesArentMissing(states);
-                this.VerifyNoStatesAreDuplicates(states);
-            }
+            this.VerifyStatesArentMissing(states);
+            this.VerifyNoStatesAreDuplicates(states);
         }
 
         private void VerifyStatesArentMissing(IState<T>[] states)

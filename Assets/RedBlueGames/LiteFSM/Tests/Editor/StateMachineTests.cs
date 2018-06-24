@@ -47,7 +47,7 @@
         }
 
         [Test]
-        public void CtorNoReflection_DuplicateStates_Throws()
+        public void CtorNoReflection_TooManyStates_Throws()
         {
             // Arrange
             var log = new StateMachineDiagonosticsLog<TwoStatesID>();
@@ -66,6 +66,33 @@
             var exception = Assert.Throws<System.ArgumentException>(
                 () => new StateMachine<TwoStatesID>(stubStates, TwoStatesID.One));
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void CtorNoReflection_CorrectNumberOfStatesButDuplicates_Throws()
+        {
+            // Arrange
+            var log = new StateMachineDiagonosticsLog<TwoStatesID>();
+            var stubStates = new StateWithDiagnostics<TwoStatesID>[]
+            {
+                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+            };
+
+            // Both "DuplicateStates" and "NotEnoughStates" would be valid errors
+            var notEnoughMessage = string.Concat(
+                    "StateMachine trying to initialize with an invalid set of states. " +
+                    "Not enough states passed in. Missing states: Two");
+
+            var duplicatesMessage = string.Concat(
+                    "StateMachine trying to initialize with an invalid set of states. " +
+                    "Duplicate states passed in. Duplicate states: One");
+
+            // Act / Assert
+            var exception = Assert.Throws<System.ArgumentException>(
+                () => new StateMachine<TwoStatesID>(stubStates, TwoStatesID.One));
+            Assert.That(exception.Message,
+                        Is.EqualTo(notEnoughMessage).Or.EqualTo(duplicatesMessage));
         }
 
         [Test]
