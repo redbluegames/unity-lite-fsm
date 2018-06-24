@@ -16,12 +16,6 @@
             }
         }
 
-        public StateMachine(IStateReflector<T> reflector, T initialStateID)
-        {
-            var reflectedStates = reflector.GetStates();
-            this.Initialize(reflectedStates, initialStateID);
-        }
-
         public StateMachine(IState<T>[] states, T initialStateID)
         {
             this.Initialize(states, initialStateID);
