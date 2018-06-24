@@ -134,5 +134,27 @@
             // Assert
             Assert.That(log, Is.EqualTo(expectedLog));
         }
+
+        [Test]
+        public void ChangeState_CurrentState_DoesNothing()
+        {
+            // Arrange
+            var log = new StateMachineDiagonosticsLog<TwoStatesID>();
+            var stubStates = new StubStateWithDiagnostics<TwoStatesID>[]
+            {
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.Two, log),
+            };
+
+            var stateMachine = new StateMachine<TwoStatesID>(stubStates, TwoStatesID.One);
+            var expectedLog = new StateMachineDiagonosticsLog<TwoStatesID>();
+            expectedLog.AddEntry(StateMachineDiagonosticsLog<TwoStatesID>.LogEntry.Callback.Enter, TwoStatesID.One);
+
+            // Act
+            stateMachine.ChangeState(TwoStatesID.One);
+
+            // Assert
+            Assert.That(log, Is.EqualTo(expectedLog));
+        }
     }
 }
