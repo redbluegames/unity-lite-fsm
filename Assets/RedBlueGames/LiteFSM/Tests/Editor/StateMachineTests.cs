@@ -9,27 +9,31 @@
         public void CtorNoReflection_OneState_EntersOnlyInitialState()
         {
             // Arrange
-            var stubStates = new StateStub<TwoStatesID>[]
+            var log = new StateMachineDiagonosticsLog<TwoStatesID>();
+            var stubStates = new StateWithDiagnostics<TwoStatesID>[]
             {
-                new StateStub<TwoStatesID>(TwoStatesID.One),
-                new StateStub<TwoStatesID>(TwoStatesID.Two),
+                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.Two, log),
             };
+
+            var expectedLog = new StateMachineDiagonosticsLog<TwoStatesID>();
+            expectedLog.AddEntry(StateMachineDiagonosticsLog<TwoStatesID>.LogEntry.Callback.Enter, TwoStatesID.One);
 
             // Act
             new StateMachine<TwoStatesID>(stubStates, TwoStatesID.One);
 
             // Assert
-            Assert.That(stubStates[0].EnterCalled, Is.True);
-            Assert.That(stubStates[1].EnterCalled, Is.False);
+            Assert.That(log, Is.EqualTo(expectedLog));
         }
 
         [Test]
         public void CtorNoReflection_NotEnoughStates_Throws()
         {
             // Arrange
-            var stubStates = new StateStub<TwoStatesID>[]
+            var log = new StateMachineDiagonosticsLog<TwoStatesID>();
+            var stubStates = new StateWithDiagnostics<TwoStatesID>[]
             {
-                new StateStub<TwoStatesID>(TwoStatesID.One)
+                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log)
             };
 
             var expectedMessage = string.Concat(
@@ -46,11 +50,12 @@
         public void CtorNoReflection_DuplicateStates_Throws()
         {
             // Arrange
-            var stubStates = new StateStub<TwoStatesID>[]
+            var log = new StateMachineDiagonosticsLog<TwoStatesID>();
+            var stubStates = new StateWithDiagnostics<TwoStatesID>[]
             {
-                new StateStub<TwoStatesID>(TwoStatesID.One),
-                new StateStub<TwoStatesID>(TwoStatesID.One),
-                new StateStub<TwoStatesID>(TwoStatesID.Two),
+                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.Two, log),
             };
 
             var expectedMessage = string.Concat(
@@ -77,6 +82,30 @@
             var exception = Assert.Throws<System.ArgumentException>(
                 () => new StateMachine<NotAnEnum>(stubStates, default(NotAnEnum)));
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+        }
+
+        [Test]
+        public void ChangeState_ValidState_ExitsThenEnters()
+        {
+            // Arrange
+            var log = new StateMachineDiagonosticsLog<TwoStatesID>();
+            var stubStates = new StateWithDiagnostics<TwoStatesID>[]
+            {
+                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.Two, log),
+            };
+
+            var stateMachine = new StateMachine<TwoStatesID>(stubStates, TwoStatesID.One);
+            var expectedLog = new StateMachineDiagonosticsLog<TwoStatesID>();
+            expectedLog.AddEntry(StateMachineDiagonosticsLog<TwoStatesID>.LogEntry.Callback.Enter, TwoStatesID.One);
+            expectedLog.AddEntry(StateMachineDiagonosticsLog<TwoStatesID>.LogEntry.Callback.Exit, TwoStatesID.One);
+            expectedLog.AddEntry(StateMachineDiagonosticsLog<TwoStatesID>.LogEntry.Callback.Enter, TwoStatesID.Two);
+
+            // Act
+            stateMachine.ChangeState(TwoStatesID.Two);
+
+            // Assert
+            Assert.That(log, Is.EqualTo(expectedLog));
         }
     }
 }
