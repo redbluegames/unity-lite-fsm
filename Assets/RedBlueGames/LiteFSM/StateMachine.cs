@@ -3,6 +3,11 @@
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// State machine manages a collection of states, enforcing that only one is entered
+    /// at any time. It calling each State's Enter and Exit method as the StateMachine
+    /// moves between states.
+    /// </summary>
     public class StateMachine<T> : IStateMachine<T> where T : struct, IConvertible, IComparable, IFormattable
     {
         private Dictionary<T, IState<T>> states;
@@ -16,11 +21,22 @@
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of a <see cref="T:RedBlueGames.LiteFSM.StateMachine`1"/>.
+        /// Immediately Enters (calls the Enter method on) the supplied Initial state.
+        /// </summary>
+        /// <param name="states">States to use. All entries in T must be represented in this array.</param>
+        /// <param name="initialStateID">Initial state identifier. This will be entered immediately.</param>
         public StateMachine(IState<T>[] states, T initialStateID)
         {
             this.Initialize(states, initialStateID);
         }
 
+        /// <summary>
+        /// Change the StateMachine to the specified state. Exits (calls the
+        /// Exit method on) the current state and Enters the desired one.
+        /// </summary>
+        /// <param name="desiredStateID">ID of the desired state.</param>
         public void ChangeState(T desiredStateID)
         {
             // Can't exit and re-enter the same state
@@ -34,6 +50,10 @@
             this.CurrentState.Enter();
         }
 
+        /// <summary>
+        /// Update the StateMachine with the specified deltaTime.
+        /// </summary>
+        /// <param name="deltaTime">Delta time - time elapsed between updates.</param>
         public void Update(float deltaTime)
         {
             this.CurrentState.Update(deltaTime);
