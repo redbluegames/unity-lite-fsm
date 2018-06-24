@@ -2,11 +2,11 @@
 {
     using System;
 
-    public class StateStubNoEnum : IState<NotAnEnum>
+    public class StubStateWithInvalidEnum : IState<NotAnEnum>
     {
         public NotAnEnum ID { get; private set; }
 
-        public StateStubNoEnum(NotAnEnum id)
+        public StubStateWithInvalidEnum(NotAnEnum id)
         {
             this.ID = id;
         }

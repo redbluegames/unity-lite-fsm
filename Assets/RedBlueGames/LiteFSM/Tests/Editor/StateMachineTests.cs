@@ -10,10 +10,10 @@
         {
             // Arrange
             var log = new StateMachineDiagonosticsLog<TwoStatesID>();
-            var stubStates = new StateWithDiagnostics<TwoStatesID>[]
+            var stubStates = new StubStateWithDiagnostics<TwoStatesID>[]
             {
-                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
-                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.Two, log),
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.Two, log),
             };
 
             var expectedLog = new StateMachineDiagonosticsLog<TwoStatesID>();
@@ -31,9 +31,9 @@
         {
             // Arrange
             var log = new StateMachineDiagonosticsLog<TwoStatesID>();
-            var stubStates = new StateWithDiagnostics<TwoStatesID>[]
+            var stubStates = new StubStateWithDiagnostics<TwoStatesID>[]
             {
-                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log)
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log)
             };
 
             var expectedMessage = string.Concat(
@@ -51,11 +51,11 @@
         {
             // Arrange
             var log = new StateMachineDiagonosticsLog<TwoStatesID>();
-            var stubStates = new StateWithDiagnostics<TwoStatesID>[]
+            var stubStates = new StubStateWithDiagnostics<TwoStatesID>[]
             {
-                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
-                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
-                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.Two, log),
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.Two, log),
             };
 
             var expectedMessage = string.Concat(
@@ -73,10 +73,10 @@
         {
             // Arrange
             var log = new StateMachineDiagonosticsLog<TwoStatesID>();
-            var stubStates = new StateWithDiagnostics<TwoStatesID>[]
+            var stubStates = new StubStateWithDiagnostics<TwoStatesID>[]
             {
-                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
-                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
             };
 
             // Both "DuplicateStates" and "NotEnoughStates" would be valid errors
@@ -99,7 +99,7 @@
         public void CtorNoReflection_NotAnEnum_Throws()
         {
             // Arrange
-            var stubStates = new StateStubNoEnum[] { };
+            var stubStates = new StubStateWithInvalidEnum[] { };
 
             var expectedMessage = string.Concat(
                     "StateMachine trying to initialize with an invalid generic type. " +
@@ -116,10 +116,10 @@
         {
             // Arrange
             var log = new StateMachineDiagonosticsLog<TwoStatesID>();
-            var stubStates = new StateWithDiagnostics<TwoStatesID>[]
+            var stubStates = new StubStateWithDiagnostics<TwoStatesID>[]
             {
-                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
-                new StateWithDiagnostics<TwoStatesID>(TwoStatesID.Two, log),
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.One, log),
+                new StubStateWithDiagnostics<TwoStatesID>(TwoStatesID.Two, log),
             };
 
             var stateMachine = new StateMachine<TwoStatesID>(stubStates, TwoStatesID.One);

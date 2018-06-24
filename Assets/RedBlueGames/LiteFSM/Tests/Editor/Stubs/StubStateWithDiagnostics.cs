@@ -2,13 +2,13 @@
 {
     using System;
 
-    public class StateWithDiagnostics<T> : IState<T> where T : struct, IConvertible, IComparable, IFormattable
+    public class StubStateWithDiagnostics<T> : IState<T> where T : struct, IConvertible, IComparable, IFormattable
     {
         public T ID { get; private set; }
 
         public StateMachineDiagonosticsLog<T> Log { get; set; }
 
-        public StateWithDiagnostics(T id, StateMachineDiagonosticsLog<T> diagonosticsLog)
+        public StubStateWithDiagnostics(T id, StateMachineDiagonosticsLog<T> diagonosticsLog)
         {
             this.ID = id;
             this.Log = diagonosticsLog;
