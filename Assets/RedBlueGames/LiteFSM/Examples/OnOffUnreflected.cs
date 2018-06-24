@@ -2,7 +2,7 @@
 {
     using UnityEngine;
 
-    public class EnumOnOff : MonoBehaviour
+    public class OnOffUnreflected : MonoBehaviour
     {
         private enum OnOffStateID
         {
@@ -14,9 +14,11 @@
 
         private void Awake()
         {
-            // Reflected Setup
-            var reflector = new StateReflector<OnOffStateID>(this);
-            this.stateMachine = new StateMachine<OnOffStateID>(reflector.GetStates(), OnOffStateID.Off);
+            // Unreflected Setup
+            var stateList = new System.Collections.Generic.List<State<OnOffStateID>>();
+            stateList.Add(new State<OnOffStateID>(OnOffStateID.Off, this.EnterOff, null, this.UpdateOff));
+            stateList.Add(new State<OnOffStateID>(OnOffStateID.On, this.EnterOn, null, this.UpdateOn));
+            this.stateMachine = new StateMachine<OnOffStateID>(stateList.ToArray(), OnOffStateID.Off);
         }
 
         private void Update()
@@ -29,14 +31,8 @@
             Debug.Log(gameObject.name + "_EnterOff");
         }
 
-        private void ExitOff()
-        {
-            Debug.Log(gameObject.name + "_ExitOff");
-        }
-
         private void UpdateOff(float dT)
         {
-            //Debug.Log(gameObject.name + "_UpdateOff: " + dT);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 this.stateMachine.ChangeState(OnOffStateID.On);
@@ -48,14 +44,8 @@
             Debug.Log(gameObject.name + "_EnterOn");
         }
 
-        private void ExitOn()
-        {
-            Debug.Log(gameObject.name + "_ExitOn");
-        }
-
         private void UpdateOn(float dT)
         {
-            //Debug.Log(gameObject.name + "_UpdateOn: " + dT);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 this.stateMachine.ChangeState(OnOffStateID.Off);
