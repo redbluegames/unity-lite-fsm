@@ -87,8 +87,8 @@ LiteFSM is heavily influenced by [Prime31's StateKitLite](https://github.com/pri
 
 # Installation
 There are two ways you can install LiteFSM.
-* [Todo] Via Unity Custom Package:
-  1. Download the latest package in the Releases section.
+* Via Unity Custom Package:
+  1. Download the [latest package](https://github.com/redbluegames/unity-lite-fsm/releases/latest) in the Releases section.
   2. From your project in Unity, install the custom package through `Assets/Import Package/Custom Package`
 * Via git:
   1. Clone this project or download the source
