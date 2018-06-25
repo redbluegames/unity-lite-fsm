@@ -7,13 +7,78 @@ State machines can be a very readable and maintainable way to organize and manag
 ## Using LiteFSM
 Here is a simple example of how to create and use a StateMachine to manage state.
 
-[OnOff code snippet goes here]
+```C#
+public class OnOffUnreflected : MonoBehaviour
+{
+    private bool isOn;
+    private StateMachine<OnOffStateID> stateMachine;
+
+    private enum OnOffStateID
+    {
+        Off = 0,
+        On = 1
+    }
+
+    private void Awake()
+    {
+        var stateList = new List<State<OnOffStateID>>();
+        stateList.Add(new State<OnOffStateID>(OnOffStateID.Off, this.EnterOff, null, this.UpdateOff));
+        stateList.Add(new State<OnOffStateID>(OnOffStateID.On, this.EnterOn, null, this.UpdateOn));
+        this.stateMachine = new StateMachine<OnOffStateID>(stateList.ToArray(), OnOffStateID.Off);
+    }
+
+    private void Update()
+    {
+        this.stateMachine.Update(Time.deltaTime);
+    }
+
+    private void EnterOff()
+    {
+        this.isOn = false;
+    }
+
+    private void UpdateOff(float dT)
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            this.stateMachine.ChangeState(OnOffStateID.On);
+    }
+
+    private void EnterOn()
+    {
+        this.isOn = true;
+    }
+
+    private void UpdateOn(float dT)
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            this.stateMachine.ChangeState(OnOffStateID.Off);
+    }
+}
+```
 
 As you can see from the above snippet, LiteFSM States are `Enum` based. You do not need to create a new class for every state. Instead, each State and StateMachine is assigned an enum that represents all of its states. States are still objects, but they only contain an ID (enum entry), and references to three optional callbacks: `Enter`, `Exit`, and `Update`.
 
 There is also a StateReflector object that you can use to help reduce boilerplate of creating the state array:
 
-[OnOffReflected code snippet goes here]
+```C#
+private void Awake()
+{
+    // Reflected Setup
+    var reflector = new StateReflector<OnOffStateID>(this);
+    this.stateMachine = new StateMachine<OnOffStateID>(reflector.GetStates(), OnOffStateID.Off);
+}
+
+private void EnterOn()
+{
+    this.isOn = true;
+}
+
+private void ExitOn()
+{
+    this.isOn = false;
+}
+...
+```
 
 ## Why LiteFSM?
 There are many different ways to implement State Machines. At RedBlueGames we use a much more powerful, class based Hierarchical State Machine framework for our bigger projects. But often on smaller projects we'll have a simple object that doesn't need to grow or be extended much. In these cases we often found ourselves using simple `switch` statement based state machines, with manual calls to "Enter" and "Exit" methods. This was brittle, and required a lot of boilerplate. So we wanted to make the simplest possible solution to solve those problems.
@@ -32,4 +97,4 @@ There are two ways you can install LiteFSM.
 # Contributing
 We don't immediately have need for contributions to this repository, as it's as featureful as we'd like. Bugfixes, tech debt, and documentation fixes are welcome, but we likely won't change the core API or functionality.
 
-You can also help out with our [other open source projects](https://github.com/redbluegames), or just support us by checking out the [RedBlueGames website](http://redbluegames.com/) and [blog](http://blog.redbluegames.com/), or following us on [Twitter](https://twitter.com/redbluegames).
+You can also help out with our [other open source projects](https://github.com/redbluegames), or just support us by checking out the [RedBlueGames website](http://redbluegames.com/) and [blog](http://blog.redbluegames.com/) and following us on [Twitter](https://twitter.com/redbluegames).
